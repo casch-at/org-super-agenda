@@ -1116,10 +1116,11 @@ actually the ORDER for the groups."
   "Hide/Show any empty/non-empty groups after `org-agenda-finalize',
 `org-agenda-filter-apply'  was called."
   (cl-labels ((header-p () (org-get-at-bol 'org-super-agenda-header))
-              (grid-p () (not (or (org-get-at-bol 'org-agenda-structural-header)
-                                  (org-get-at-bol 'org-agenda-date-header)
-                                  (org-get-at-bol 'type)
-                                  (org-get-at-bol 'org-super-agenda-header))))
+              (grid-p () (not (let ((props (text-properties-at (point-at-bol))))
+                                (or (member 'org-agenda-structural-header props)
+                                    (member 'org-agenda-date-header props)
+                                    (member 'type props)
+                                    (member 'org-super-agenda-header props)))))
               (group-item-visible-p () (and (org-get-at-bol 'type) (not (org-get-at-bol 'invisible))))
               (next-header () (let ((hide-p t) header grid-end)
                                 (while (not (or (bobp) header))
